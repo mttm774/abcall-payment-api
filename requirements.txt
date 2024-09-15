@@ -3,3 +3,8 @@ Flask-RESTful==0.3.10
 python-dotenv==1.0.0
 requests
 gunicorn==20.1.0
+psycopg2-binary==2.9.6
+SQLAlchemy==1.4.40
+flask-sqlalchemy==3.0.5
+marshmallow==3.20.1
+marshmallow-sqlalchemy==0.29.0
