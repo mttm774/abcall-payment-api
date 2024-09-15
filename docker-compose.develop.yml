@@ -16,6 +16,10 @@ services:
       - db
     depends_on:
       - db
+    networks:
+      - payment_net
+      - app_net
+      
   db:
     build:
       context: .
@@ -28,3 +32,16 @@ services:
       - "./docker/postgresql:/docker-entrypoint-initdb.d"
     ports:
       - "5435:5432"
+    networks:
+      - payment_net
+
+
+
+
+networks:
+  payment_net:
+    name: payment_net
+    driver: bridge
+  app_net:
+    name: app_net
+    driver: bridge
