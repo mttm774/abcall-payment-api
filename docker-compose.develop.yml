@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  api:
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    container_name: abcall-payment-local-api
+    restart: always
+    volumes:
+      - ".:/app"
+    ports:
+      - "5005:3005"
+    env_file:
+      - .env.local
+    tty: true
+    links:
+      - db
+    depends_on:
+      - db
+  db:
+    image: postgres
+    env_file:
+      - .env.db
+    container_name: payment-local-db
+    volumes:
+      - "./data/postgres:/var/lib/postgresql"
+    ports:
+      - "5433:5432"

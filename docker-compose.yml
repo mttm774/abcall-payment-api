@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: abcall-payment-api
+    restart: always
+    volumes:
+      - ".:/app"
+    ports:
+      - "3005:3005"
+    env_file:
+      - .env
+    tty: true

@@ -17,3 +17,25 @@ run:
 	else \
 		flask run -p $(PORT); \
 	fi
+
+run-docker:
+ifeq ($(strip $(PORT)),)
+	flask run -h 0.0.0.0
+else
+	flask run -p $(PORT) -h 0.0.0.0
+endif
+
+docker-gunicorn:
+	  gunicorn -w 4 --bind 127.0.0.1:$(PORT) wsgi:app
+
+docker-up:
+	docker compose up --build
+
+docker-down:
+	docker compose down
+
+docker-dev-up:
+	docker compose -f=docker-compose.develop.yml up --build
+
+docker-dev-down:
+	docker compose -f=docker-compose.develop.yml down
