@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: post-configmap
+data:
+  FLASK_APP: "flaskr/app"
+  FLASK_ENV: "production"
+  APP_NAME: "abcall-payment-api"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: payment-configmap
+data:
+  FLASK_APP: "flaskr/app"
+  FLASK_ENV: "production"
+  APP_NAME: "abcall-payment-api"
