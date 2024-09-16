@@ -45,3 +45,21 @@ create-database:
 
 generate-data:
 	docker exec payment-local-db psql -U develop -d payment-db -f /docker-entrypoint-initdb.d/invoiceFakeData.sql
+
+kubernetes-up:
+	kubectl apply -f kubernetes/k8s-configMap.yaml
+	kubectl apply -f kubernetes/k8s-secrets.yaml
+	kubectl apply -f kubernetes/k8s-deployment.yaml
+	kubectl apply -f kubernetes/k8s-ingress.yaml
+
+kubernetes-dev-up:
+	make kubernetes-dev-up
+	minikube tunnel
+
+kubernetes-dev-down:
+	kubectl delete configMap/payment-configmap
+	kubectl delete secrets/payment-secrets
+	kubectl delete deploy/abcall-payment-api
+	kubectl delete ingress/abcall-payment-ingress
+
+
