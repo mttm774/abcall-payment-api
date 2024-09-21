@@ -25,6 +25,12 @@ else
 	flask run -p $(PORT) -h 0.0.0.0
 endif
 
+run-worker:
+	celery -A flaskr.tasks.task.celery worker --loglevel=info
+
+run-beat:
+	celery -A flaskr.tasks.task.celery beat --loglevel=info
+
 docker-gunicorn:
 	  gunicorn -w 4 --bind 127.0.0.1:$(PORT) wsgi:app
 
@@ -45,6 +51,9 @@ create-database:
 
 generate-data:
 	docker exec payment-local-db psql -U develop -d payment-db -f /docker-entrypoint-initdb.d/invoiceFakeData.sql
+
+generate-customer-data:
+	docker exec payment-local-db psql -U develop -d payment-db -f /docker-entrypoint-initdb.d/customerFakeData.sql
 
 kubernetes-up:
 	kubectl apply -f kubernetes/k8s-configMap.yaml

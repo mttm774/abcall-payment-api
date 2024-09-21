@@ -3,6 +3,7 @@ from celery.schedules import crontab
 import os
 from  config import Config
 from ..application.invoice_service import InvoiceService
+from ..infrastructure.databases.customer_postresql_repository import CustomerPostgresqlRepository
 
 
 config=Config()
@@ -13,8 +14,9 @@ celery = Celery('tasks', broker=f'{config.SCHEDULE_BROKER}{config.TOPIC_SCHEDULE
 @celery.task
 def scheduled_generate_invoice_task():
     print("generating invoices!")
-    invoice_service=InvoiceService(None)
-    invoice_service.generate_invoices(None)
+    repository = CustomerPostgresqlRepository(config.DATABASE_URI)
+    invoice_service=InvoiceService(None,repository)
+    invoice_service.generate_invoices()
 
 
 celery.conf.beat_schedule = {

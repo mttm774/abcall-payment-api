@@ -25,3 +25,10 @@ CREATE TABLE IF NOT EXISTS invoices (
     generation_date TIMESTAMP WITH TIME ZONE,
     period TIMESTAMP WITH TIME ZONE
 );
+
+CREATE TABLE IF NOT EXISTS customers(
+   id UUID PRIMARY KEY,
+   name VARCHAR(100),
+   plan_rate NUMERIC(10, 2),
+   bill_date  TIMESTAMP WITH TIME ZONE
+);
