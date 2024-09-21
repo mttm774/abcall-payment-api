@@ -12,3 +12,6 @@ class InvoiceService:
         mapper = InvoiceMapper()
         json_response =  mapper.list_response(invoices)
         return json_response
+    
+    def generate_invoices(self, customer_id)->str:
+        print(f'generate invoices to {customer_id}')

@@ -12,3 +12,6 @@ class Config:
     ENVIRONMENT = environment
     APP_NAME=os.getenv('APP_NAME')
     DATABASE_URI=os.getenv('DATABASE_URI')
+    SCHEDULE_BROKER=os.getenv('SCHEDULE_BROKER')
+    TOPIC_SCHEDULE=os.getenv('TOPIC_SCHEDULE')
+    MINUTES_TO_EXECUTE_INVOICES=os.getenv('MINUTES_TO_EXECUTE_INVOICES')
