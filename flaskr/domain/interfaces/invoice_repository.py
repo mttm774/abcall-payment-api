@@ -8,3 +8,6 @@ class InvoiceRepository:
     
     def list_invoices_by_customer(self, customer_id) -> List[Invoice]:
         raise NotImplementedError
+    
+    def create_invoice(self,invoice: Invoice):
+        raise NotImplementedError

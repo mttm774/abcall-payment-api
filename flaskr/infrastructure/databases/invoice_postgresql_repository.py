@@ -66,3 +66,8 @@ class InvoicePostgresqlRepository(InvoiceRepository):
             generation_date=model.generation_date,
             period=model.period
         )
+    
+    def create_invoice(self,invoice: Invoice):
+        session = self.Session()
+        session.add(self._to_model(invoice))
+        session.commit()

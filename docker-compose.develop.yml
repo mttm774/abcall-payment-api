@@ -19,6 +19,36 @@ services:
     networks:
       - payment_net
       - app_net
+
+
+  celeryworker:
+    build:
+      context: .
+    command: celery -A flaskr.tasks.task.celery worker --loglevel=info
+    container_name: abcall-payment-local-worker
+    restart: always
+    env_file:
+      - .env.local
+    tty: true
+    links:
+      - db
+    depends_on:
+      - db
+    networks:
+      - payment_net
+      - app_net
+
+
+
+  celerybeat:
+    build:
+      context: .
+    command: celery -A flaskr.tasks.task.celery beat --loglevel=info
+    container_name: abcall-payment-local-beat
+    restart: always
+    env_file:
+      - .env.local
+
       
   db:
     build:

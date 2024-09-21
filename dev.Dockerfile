@@ -14,8 +14,6 @@ RUN pip install --upgrade pip
 RUN pip install wheel
 RUN make activate
 RUN make install
-RUN make run-worker
-RUN make run-beat
 
 EXPOSE 3005
 
