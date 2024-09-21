@@ -20,3 +20,5 @@ class InvoiceService:
         customers=self.customer_repository.list()
         for item in customers:
             print(item.id)
+            #todo crear la factura
+            #todo enviar la factura al reports
