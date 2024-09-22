@@ -36,11 +36,31 @@ spec:
                 configMapKeyRef:
                   name: payment-configmap
                   key: APP_NAME
+            - name: "TOPIC_SCHEDULE"
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-configmap
+                  key: TOPIC_SCHEDULE
+            - name: "MINUTES_TO_EXECUTE_INVOICES"
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-configmap
+                  key: MINUTES_TO_EXECUTE_INVOICES
+            - name: "URL_REPORTS_SERVICE"
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-configmap
+                  key: URL_REPORTS_SERVICE
             - name: "DATABASE_URI"
               valueFrom:
                 secretKeyRef:
                   name: payment-secrets
                   key: DATABASE_URI
+            - name: "SCHEDULE_BROKER"
+              valueFrom:
+                secretKeyRef:
+                  name: payment-secrets
+                  key: SCHEDULE_BROKER
           ports:
             - containerPort: 3005
           imagePullPolicy: Always
