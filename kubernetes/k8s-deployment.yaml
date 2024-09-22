@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: abcall-payment-api
-          image: abcall.azurecr.io/abcall-payment-api:1.0.0
+          image: abcall.azurecr.io/abcall-payment-api:2.0.0
           env:
             - name: "FLASK_APP"
               valueFrom:
