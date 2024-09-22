@@ -6,10 +6,12 @@ RUN mkdir -p /docker-entrypoint-initdb.d
 # Copy the SQL initialization script into the container
 COPY ./docker/postgresql/init.sql /docker-entrypoint-initdb.d/
 COPY ./docker/postgresql/invoiceFakeData.sql /docker-entrypoint-initdb.d/
+COPY ./docker/postgresql/customerFakeData.sql /docker-entrypoint-initdb.d/
 
 # Set the correct file permissions for the SQL script
 RUN chmod 644 /docker-entrypoint-initdb.d/init.sql
 RUN chmod 644 /docker-entrypoint-initdb.d/invoiceFakeData.sql
+RUN chmod 644 /docker-entrypoint-initdb.d/customerFakeData.sql
 
 # Expose the PostgreSQL port
 EXPOSE 5432

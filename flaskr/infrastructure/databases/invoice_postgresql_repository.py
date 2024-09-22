@@ -66,3 +66,28 @@ class InvoicePostgresqlRepository(InvoiceRepository):
             generation_date=model.generation_date,
             period=model.period
         )
+    
+    def create_invoice(self,invoice: Invoice):
+        session = self.Session()
+        session.add(self._to_model(invoice))
+        session.commit()
+
+    def update_invoice(self,invoice: Invoice):
+        session = self.Session()
+        session.query(InvoiceModelSqlAlchemy).filter_by(id=invoice.id).update(
+            { 
+                "customer_id":str(invoice.customer_id),
+                "invoice_id":invoice.invoice_id,
+                "payment_id":str(invoice.payment_id),
+                "amount":str(invoice.amount),
+                "tax":str(invoice.tax),
+                "total_amount":str(invoice.total_amount),
+                "subscription":invoice.subscription,
+                "subscription_id":str(invoice.subscription_id),
+                "status":invoice.status,
+                "created_at": invoice.created_at.isoformat() if invoice.created_at else None,
+                "updated_at": invoice.updated_at.isoformat() if invoice.updated_at else None,
+                "generation_date": invoice.generation_date.isoformat() if invoice.generation_date else None,
+                "period":invoice.period.isoformat() if invoice.generation_date else None,
+            })
+        session.commit()
