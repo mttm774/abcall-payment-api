@@ -11,3 +11,6 @@ class InvoiceRepository:
     
     def create_invoice(self,invoice: Invoice):
         raise NotImplementedError
+    
+    def update_invoice(self,invoice: Invoice):
+        raise NotImplementedError

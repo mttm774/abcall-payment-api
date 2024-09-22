@@ -25,12 +25,6 @@ else
 	flask run -p $(PORT) -h 0.0.0.0
 endif
 
-run-worker:
-	celery -A flaskr.tasks.task.celery worker --loglevel=info --detach
-
-run-beat:
-	celery -A flaskr.tasks.task.celery beat --loglevel=info --detach
-
 docker-gunicorn:
 	  gunicorn -w 4 --bind 127.0.0.1:$(PORT) wsgi:app
 
