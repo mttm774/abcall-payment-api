@@ -1,3 +1,11 @@
+CREATE TABLE IF NOT EXISTS customers(
+   id UUID PRIMARY KEY,
+   name VARCHAR(100),
+   plan_rate NUMERIC(10, 2),
+   bill_date  TIMESTAMP WITH TIME ZONE
+);
+
+
 INSERT INTO customers (id, name,plan_rate, bill_date) values('2f3365a3-3aeb-4689-bbcf-9fc9585e22e8','Nicolai',5577,'2024-03-16');
 INSERT INTO customers (id, name,plan_rate, bill_date) values('b8ea3154-cb65-4b0d-9ea7-f2452bf3eeb0','Karie',6409,'2024-02-08');
 INSERT INTO customers (id, name,plan_rate, bill_date) values('bb7cee64-6067-4a17-a37e-f16ba913649b','Marian',5780,'2023-11-05');
