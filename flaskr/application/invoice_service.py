@@ -10,7 +10,7 @@ from ..utils import Logger
 from  config import Config
 
 class InvoiceService:
-    def __init__(self, repository: InvoiceRepository,customer_repository: CustomerRepository):
+    def __init__(self, repository: InvoiceRepository,customer_repository: CustomerRepository=None):
         self.log = Logger()
         self.repository = repository
         self.customer_repository=customer_repository
