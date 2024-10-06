@@ -4,3 +4,6 @@ __pycache__
 data
 .DS_Store
 k8s-secrets.yaml
+reports
+.coverage
+htmlcov
