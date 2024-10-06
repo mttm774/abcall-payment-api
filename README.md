@@ -6,6 +6,7 @@ This is the microservice artifact make with python 🐍 with flask 🌶️. This
 [![Flask](https://img.shields.io/badge/flask-000000?style=for-the-badge&logo=flask&logoColor=white&labelColor=000000)]()
 [![PostgreSQL](https://img.shields.io/badge/postgresql-699eca?style=for-the-badge&logo=postgresql&logoColor=white&labelColor=000000)]()
 
+https://github.com/abcall-project/abcall-payment-api/actions/workflows/action.yaml/badge.svg
 
 # Instructions to execute schedule
 
