@@ -1,0 +1,77 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    container_name: abcall-payment-local-api
+    restart: always
+    volumes:
+      - ".:/app"
+    ports:
+      - "5005:3005"
+    env_file:
+      - .env.local
+    tty: true
+    links:
+      - db
+    depends_on:
+      - db
+    networks:
+      - payment_net
+      - app_net
+
+
+  celeryworker:
+    build:
+      context: .
+    command: celery -A flaskr.tasks.task.celery worker --loglevel=info
+    container_name: abcall-payment-local-worker
+    restart: always
+    env_file:
+      - .env.local
+    tty: true
+    links:
+      - db
+    depends_on:
+      - db
+    networks:
+      - payment_net
+      - app_net
+
+
+
+  celerybeat:
+    build:
+      context: .
+    command: celery -A flaskr.tasks.task.celery beat --loglevel=info
+    container_name: abcall-payment-local-beat
+    restart: always
+    env_file:
+      - .env.local
+
+      
+  db:
+    build:
+      context: .
+      dockerfile: db.Dockerfile
+    env_file:
+      - .env.db
+    container_name: payment-local-db
+    volumes:
+      - "./data/postgresql:/var/lib/postgresql"
+      - "./docker/postgresql:/docker-entrypoint-initdb.d"
+    ports:
+      - "5435:5432"
+    networks:
+      - payment_net
+
+
+
+
+networks:
+  payment_net:
+    name: payment_net
+    driver: bridge
+  app_net:
+    name: app_net
+    driver: bridge

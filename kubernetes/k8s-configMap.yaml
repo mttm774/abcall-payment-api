@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: payment-configmap
+data:
+  FLASK_APP: "flaskr/app"
+  FLASK_ENV: "production"
+  APP_NAME: "abcall-payment-api"
+  TOPIC_SCHEDULE: "invoices-schedule"
+  MINUTES_TO_EXECUTE_INVOICES: "10"
+  URL_REPORTS_SERVICE: "http://abcall-reports-api-service:3008/"
