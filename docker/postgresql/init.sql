@@ -9,19 +9,19 @@ BEGIN
 END
 $do$;
 
-CREATE TABLE IF NOT EXIST invoice_status(
-   id SERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS invoice_status(
+   id UUID PRIMARY KEY,
    name VARCHAR(20)
 );
 
 
-CREATE TABLE IF NOT EXIST payment_method(
-   id SERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS payment_method(
+   id UUID PRIMARY KEY,
    name VARCHAR(20)
 );
 
-CREATE TABLE IF NOT EXIST payment_status(
-   id SERIAL PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS payment_status(
+   id UUID PRIMARY KEY,
    name VARCHAR(20)
 );
 
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS invoice (
     tax NUMERIC(10, 2),
     total_amount NUMERIC(10, 2),
     plan_id UUID,
-    status Integer,
+    status UUID,
     created_at TIMESTAMP WITH TIME ZONE,
     updated_at TIMESTAMP WITH TIME ZONE,
     generation_date TIMESTAMP WITH TIME ZONE,
@@ -47,13 +47,13 @@ CREATE TABLE IF NOT EXISTS invoice (
 );
 
 CREATE TABLE IF NOT EXISTS invoice_detail (
-      id SERIAL PRIMARY KEY,
+      id UUID PRIMARY KEY,
       detail VARCHAR(255),
       amount NUMERIC(10, 2),
       tax NUMERIC(10, 2),
       total_amount NUMERIC(10, 2),
       issue_id UUID NULL,
-      chanel_plan_id Integer NULL,
+      chanel_plan_id UUID NULL,
       invoice_id UUID,
       CONSTRAINT fk_invoice
          FOREIGN KEY (invoice_id)
@@ -67,8 +67,8 @@ CREATE TABLE IF NOT EXISTS payment (
     amount NUMERIC(10, 2),
     created_at TIMESTAMP WITH TIME ZONE,
     invoice_id UUID,
-    status Integer,
-    method Integer,
+    status UUID,
+    method UUID,
       CONSTRAINT fk_invoice
          FOREIGN KEY (invoice_id)
          REFERENCES invoice(id)
@@ -80,5 +80,5 @@ CREATE TABLE IF NOT EXISTS payment (
       CONSTRAINT fk_status
          FOREIGN KEY (status)
          REFERENCES payment_status(id)
-         ON DELETE CASCADE,
+         ON DELETE CASCADE
 );
