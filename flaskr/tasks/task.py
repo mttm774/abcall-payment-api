@@ -15,6 +15,14 @@ celery = Celery('tasks', broker=f'{config.SCHEDULE_BROKER}{config.TOPIC_SCHEDULE
 @celery.task
 def scheduled_generate_invoice_task():
     print("generating invoices!")
+    '''
+    1. determinar el periodo de facturación sería el mes
+    2. consultar si se facturó el monto básico sino crear la factura y el detalle
+    3. consultar que incidentes no fueron facturados e insertarlos
+    4. generar el pdf de la factura.
+    '''
+    
+    
     repository = CustomerPostgresqlRepository(config.DATABASE_URI)
     repository_invoice = InvoicePostgresqlRepository(config.DATABASE_URI)
     invoice_service=InvoiceService(repository_invoice,repository)

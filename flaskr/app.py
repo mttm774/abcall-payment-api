@@ -31,3 +31,4 @@ api = Api(app)
 #resources
 api.add_resource(HealthCheck, '/health')
 api.add_resource(Invoices, '/invoices/<string:customer_id>',endpoint='invoices')
+api.add_resource(Invoices, '/GenerateInvoice/<string:action>',endpoint='post_operations')
