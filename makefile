@@ -52,12 +52,6 @@ docker-dev-down:
 create-database:
 	docker exec payment-local-db psql -U develop -d payment-db -f /docker-entrypoint-initdb.d/init.sql
 
-generate-data:
-	docker exec payment-local-db psql -U develop -d payment-db -f /docker-entrypoint-initdb.d/invoiceFakeData.sql
-
-generate-customer-data:
-	docker exec payment-local-db psql -U develop -d payment-db -f /docker-entrypoint-initdb.d/customerFakeData.sql
-
 kubernetes-up:
 	kubectl apply -f kubernetes/k8s-configMap.yaml
 	kubectl apply -f kubernetes/k8s-secrets.yaml

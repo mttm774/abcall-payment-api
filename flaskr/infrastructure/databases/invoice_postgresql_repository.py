@@ -1,10 +1,10 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine,extract, func
 from sqlalchemy.orm import sessionmaker
 from typing import List, Optional
 from uuid import UUID
 from ...domain.models import Invoice
 from ...domain.interfaces import InvoiceRepository
-from ...infrastructure.databases.invoice_model_sqlalchemy import Base, InvoiceModelSqlAlchemy
+from ...infrastructure.databases.model_sqlalchemy import Base, InvoiceModelSqlAlchemy
 
 class InvoicePostgresqlRepository(InvoiceRepository):
     def __init__(self, connection_string: str):
@@ -31,22 +31,33 @@ class InvoicePostgresqlRepository(InvoiceRepository):
         finally:
             session.close()
 
+
+    def invoice_by_month_year_by_customer(self, year, month,customer_id):
+        session = self.Session()
+
+        invoice=session.query(InvoiceModelSqlAlchemy.id).filter(
+            extract('year', InvoiceModelSqlAlchemy.created_at) == year,
+            extract('month', InvoiceModelSqlAlchemy.created_at) == month,
+            InvoiceModelSqlAlchemy.customer_id==customer_id).first()
+          
+        return invoice
+
+    
+
     def _to_model(self, invoice: Invoice) -> InvoiceModelSqlAlchemy:
         return InvoiceModelSqlAlchemy(
             id=invoice.id,
             customer_id=invoice.customer_id,
             invoice_id=invoice.invoice_id,
-            payment_id=invoice.payment_id,
+            plan_id=invoice.plan_id,
             amount=invoice.amount,
             tax=invoice.tax,
             total_amount=invoice.total_amount,
-            subscription=invoice.subscription,
-            subscription_id=invoice.subscription_id,
             status=invoice.status,
             created_at=invoice.created_at,
-            updated_at=invoice.updated_at,
+            start_at=invoice.start_at,
             generation_date=invoice.generation_date,
-            period=invoice.period
+            end_at=invoice.end_at
         )
 
     def _from_model(self, model: InvoiceModelSqlAlchemy) -> Invoice:
@@ -54,17 +65,15 @@ class InvoicePostgresqlRepository(InvoiceRepository):
             id=model.id,
             customer_id=model.customer_id,
             invoice_id=model.invoice_id,
-            payment_id=model.payment_id,
+            plan_id=model.plan_id,
             amount=model.amount,
             tax=model.tax,
             total_amount=model.total_amount,
-            subscription=model.subscription,
-            subscription_id=model.subscription_id,
             status=model.status,
             created_at=model.created_at,
-            updated_at=model.updated_at,
+            start_at=model.start_at,
             generation_date=model.generation_date,
-            period=model.period
+            end_at=model.end_at
         )
     
     def create_invoice(self,invoice: Invoice):
