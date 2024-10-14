@@ -48,6 +48,8 @@ class InvoiceService:
             if invoice_id: #si existe la factura
                  #insertar los incidentes reportados como detalles de factura
                  print(f'la factura si existe {invoice_id}')
+                 #consultar los incidentes reportados y si existen entonces crear un detalle por cada incidente reportado
+                 
                  
 
             else: # no existe la factura
