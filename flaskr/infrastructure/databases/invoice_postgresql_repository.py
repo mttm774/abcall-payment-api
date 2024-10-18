@@ -40,7 +40,7 @@ class InvoicePostgresqlRepository(InvoiceRepository):
             extract('month', InvoiceModelSqlAlchemy.created_at) == month,
             InvoiceModelSqlAlchemy.customer_id==customer_id).first()
           
-        return invoice
+        return invoice[0] if invoice else None
 
     
 
