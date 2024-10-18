@@ -10,6 +10,7 @@ from datetime import datetime,timedelta
 from ..utils import Logger
 from  config import Config
 from .customer_service import CustomerService
+from .issues_service import IssueService
 from ..domain.constants import *
 class InvoiceService:
     def __init__(self, repository: InvoiceRepository,customer_repository: CustomerRepository=None,invoice_detail_repository: InvoiceDetailRepository=None):
@@ -18,6 +19,7 @@ class InvoiceService:
         self.customer_repository=customer_repository
         self.customer_service=CustomerService()
         self.invoice_detail_repository=invoice_detail_repository
+        self.issue_service=IssueService()
 
     def list_invoices_by_customer(self, customer_id)->str:
         invoices = self.repository.list_by_consumer_id(customer_id)
@@ -28,7 +30,7 @@ class InvoiceService:
     def generate_invoices(self)->str:
         self.log.info('generating invoices')
         customers=self.customer_service.get_customer_list()
-        print(customers)
+        self.log.info(customers)
         for item in customers:
             '''
             1. determinar el periodo de facturación sería el mes
@@ -45,18 +47,15 @@ class InvoiceService:
             #2. consultar si se facturó el monto básico sino crear la factura y el detalle
             invoice_id=self.repository.invoice_by_month_year_by_customer(year,month,item.id)
 
-            if invoice_id: #si existe la factura
-                 #insertar los incidentes reportados como detalles de factura
-                 print(f'la factura si existe {invoice_id}')
-                 #consultar los incidentes reportados y si existen entonces crear un detalle por cada incidente reportado
-                 
-                 
-
-            else: # no existe la factura
-                print('no existe la factura')
+            issue_fee=self.customer_service.get_customer_plan_issue_fee(item.id)
+            self.log.info(issue_fee)
+            if invoice_id is None: # no existe la factura
+                self.log.info('no existe la factura')
                 #consultar el valor base
                 base_monthly_rate=self.customer_service.get_customer_plan_rate(item.id)
-                print(base_monthly_rate)
+                
+                self.log.info(base_monthly_rate)
+                
                 # insertar la factura 
                 new_invoice=Invoice(
                             id=uuid.uuid4(),
@@ -74,7 +73,7 @@ class InvoiceService:
                             )
                 self.repository.create_invoice(new_invoice)
 
-                print(f'id factura {new_invoice.id}')
+                self.log.info(f'id factura {new_invoice.id}')
                 
                 #insertar el detalle del valor base
                 new_detail=InvoiceDetail(
@@ -88,9 +87,35 @@ class InvoiceService:
                     chanel_plan_id=None
                 )
                 self.invoice_detail_repository.create_invoice_detail(new_detail)
+                invoice_id=new_invoice.id
                
-               
+            
+            #insertar los incidentes reportados como detalles de factura
+            issue_list=self.issue_service.get_issues_by_customer_list(item.id, year, month)
+            
+           
+            if issue_list:
+                issue_list_ids = [issue.id for issue in issue_list]
 
+            
+                #consultar los incidentes reportados y si existen entonces crear un detalle por cada incidente reportado
+                missing_list_issues=self.invoice_detail_repository.get_unfactured_issue_ids(issue_list_ids)
+                self.log.info(f'missing issue list {missing_list_issues}')
+                missing_ids_set = set(missing_list_issues)
+
+                for issue in issue_list:
+                    if issue.id in missing_ids_set:  
+                        new_detail = InvoiceDetail(
+                            id=uuid.uuid4(),
+                            detail=f'cost by issue solved {issue.id}',
+                            invoice_id=invoice_id,
+                            issue_id=issue.id,
+                            amount=issue_fee,
+                            tax=0,
+                            total_amount=issue_fee,
+                            chanel_plan_id=issue.channel_plan_id 
+                        )
+                    self.invoice_detail_repository.create_invoice_detail(new_detail)
 
 
             # now+=1
