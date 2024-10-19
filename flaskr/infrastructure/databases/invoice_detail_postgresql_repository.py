@@ -51,7 +51,8 @@ class InvoiceDetailPostgresqlRepository(InvoiceDetailRepository):
             total_amount=invoice_detail.total_amount,
             issue_id=invoice_detail.issue_id,
             chanel_plan_id=invoice_detail.chanel_plan_id,
-            invoice_id=invoice_detail.invoice_id
+            invoice_id=invoice_detail.invoice_id,
+            issue_date=invoice_detail.issue_date
         )
 
     def _from_model(self, model: InvoiceDetailModelSqlAlchemy) -> InvoiceDetail:
@@ -63,8 +64,8 @@ class InvoiceDetailPostgresqlRepository(InvoiceDetailRepository):
             total_amount=model.total_amount,
             issue_id=model.issue_id,
             chanel_plan_id=model.chanel_plan_id,
-            invoice_id=model.invoice_id
-            
+            invoice_id=model.invoice_id,
+            issue_date=model.issue_date
         )
     
 

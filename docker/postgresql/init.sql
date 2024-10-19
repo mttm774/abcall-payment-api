@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS invoice_detail (
       issue_id UUID NULL,
       chanel_plan_id UUID NULL,
       invoice_id UUID,
+      issue_date TIMESTAMP WITH TIME ZONE,
       CONSTRAINT fk_invoice
          FOREIGN KEY (invoice_id)
          REFERENCES invoice(id)
