@@ -116,3 +116,25 @@ class InvoicePostgresqlRepository(InvoiceRepository):
             session.commit()
         finally:
             session.close()
+
+
+    def sum_total_amount_by_customer_and_status(self, customer_id: UUID, status: UUID):
+        """
+        summary of total ammount
+
+        :param customer_id: UUID of customer
+        :param status: UUID of status invoice
+        :return: Summary of total_amount
+        """
+        session = self.Session()
+        try:
+            total_sum = session.query(func.sum(InvoiceModelSqlAlchemy.total_amount)) \
+                .filter(InvoiceModelSqlAlchemy.customer_id == customer_id) \
+                .filter(InvoiceModelSqlAlchemy.status == status) \
+                .scalar()
+            print(f'total sum :{total_sum}')
+            return total_sum
+        except Exception as e:
+            return 0
+        finally:
+            session.close()

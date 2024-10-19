@@ -170,3 +170,17 @@ class InvoiceService:
         except Exception as e:
             self.log.error(f'Comunication error with reports service: {str(e)}')
             return False
+        
+
+
+    def get_total_cost_pending(self, customer_id: UUID ):
+        """
+        This method query total cost of invoices
+        Args: 
+            customer_id (UUID): customer id
+        Returns:
+            total_cost: (decimal)
+        """
+        total_cost=self.repository.sum_total_amount_by_customer_and_status(customer_id,STATUS_INVOICE_GENERATED)
+        print(f'total cost {total_cost}')
+        return total_cost
