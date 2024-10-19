@@ -94,19 +94,12 @@ class InvoiceService:
             #insertar los incidentes reportados como detalles de factura
             issue_list=self.issue_service.get_issues_by_customer_list(item.id, year, month)
             
-           
-            for item in issue_list:
-                self.log.info(f'issues solveds {item.id}')
-                self.log.info(f'Type of issue.id: {type(item.id)}')
                 
             if issue_list:
                 #consultar los incidentes reportados y si existen entonces crear un detalle por cada incidente reportado
                 
                 all_billed_issues=self.invoice_detail_repository.get_factured_issue_ids()
 
-                for item in all_billed_issues:
-                    self.log.info(f'issues billed {item}')
-                    self.log.info(f'Type of billed_id: {type(item)}')
 
                 for issue in issue_list:
                     issue_uuid = UUID(issue.id)
@@ -131,30 +124,11 @@ class InvoiceService:
             invoice_to_update.total_amount=total_value
             self.repository.update_invoice(invoice_to_update)
 
-
-            # now+=1
-            # self.log.info(f'generating invoice I{now}')
-            # new_invoice=Invoice(uuid.uuid4(),
-            #                     item.id,
-            #                     f'I{now}',
-            #                     uuid.uuid4(),
-            #                     item.plan_rate,
-            #                     0,
-            #                     item.plan_rate,
-            #                     'Emprendedor',
-            #                     uuid.uuid4(),
-            #                     'G', #Generada con éxito
-            #                     datetime.now(),
-            #                     None,
-            #                     datetime.now(),
-            #                     datetime.now()
-            #                     )
-            # self.repository.create_invoice(new_invoice)
-            # #generating invoice
-            # if self.__send_invoice_to_document(new_invoice)==False:
-            #     #error creating pdf document
-            #     new_invoice.status='E' # no fue posible generar la factura
-            #     self.repository.update_invoice(new_invoice)
+            #generating invoice
+            if self.__send_invoice_to_document(invoice_to_update)==False:
+                #error creating pdf document
+                invoice_to_update.status=STATUS_INVOICE_GENERATED_WITH_ERROR # no fue posible generar la factura
+                self.repository.update_invoice(invoice_to_update)
 
 
     def __send_invoice_to_document(self,invoice: Invoice):
@@ -170,18 +144,16 @@ class InvoiceService:
             data={
                 "id":str(invoice.id),
                 "customer_id":str(invoice.customer_id),
-                "invoice_id":invoice.invoice_id,
-                "payment_id":str(invoice.payment_id),
+                "invoice_id":str(invoice.invoice_id),
+                "plan_id":str(invoice.plan_id),
                 "amount":str(invoice.amount),
                 "tax":str(invoice.tax),
                 "total_amount":str(invoice.total_amount),
-                "subscription":invoice.subscription,
-                "subscription_id":str(invoice.subscription_id),
-                "status":invoice.status,
+                "status":str(invoice.status),
                 "created_at": invoice.created_at.isoformat() if invoice.created_at else None,
-                "updated_at": invoice.updated_at.isoformat() if invoice.updated_at else None,
+                "start_at": invoice.start_at.isoformat() if invoice.start_at else None,
                 "generation_date": invoice.generation_date.isoformat() if invoice.generation_date else None,
-                "period":invoice.period.isoformat() if invoice.generation_date else None,
+                "end_at":invoice.end_at.isoformat() if invoice.end_at else None,
             }
             self.log.info('calling endpoint to generate pdf invoice ')
             response = requests.post(f'{config.URL_REPORTS_SERVICE}/invoice',json=data)
