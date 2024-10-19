@@ -13,3 +13,15 @@ class InvoiceDetail:
         self.issue_id=issue_id
         self.chanel_plan_id=chanel_plan_id
         self.invoice_id=invoice_id
+
+    def to_dict(self):
+        return {
+            'id': str(self.id),
+            'detail': str(self.detail),
+            'amount': str(self.amount),
+            'tax': str(self.tax),
+            'total_amount': str(self.total_amount),
+            'issue_id': str(self.issue_id),
+            'chanel_plan_id': str(self.chanel_plan_id),
+            'invoice_id': str(self.invoice_id)
+        }

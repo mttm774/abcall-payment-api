@@ -24,8 +24,10 @@ class Invoices(Resource):
     def get(self, action=None):
         if action == 'getInvoices':
             return self.getInvoices()
-        elif action=='get_total_cost_pending':
+        elif action=='getTotalCostPending':
             return self.get_total_cost_pending()
+        elif action=='getListDetailsInvoiceById':
+            return self.get_list_details_invoice_by_id()
         else:
             return {"message": "Action not found"}, 404
 
@@ -64,4 +66,19 @@ class Invoices(Resource):
         except Exception as ex:
             log.error(f'Some error occurred trying to get total cost of {customer_id}: {ex}')
             return {'message': 'Something was wrong trying to get total cost'}, HTTPStatus.INTERNAL_SERVER_ERROR
+        
+
+    def get_list_details_invoice_by_id(self):
+        try:
+
+            log.info(f'Receive request to get invoice details')
+
+            invoice_id = request.args.get('invoice_id')
+            invoice_detail_list = self.service.list_details_invoice_by_id(invoice_id)
+            list_details = [detail.to_dict() for detail in invoice_detail_list]
+            
+            return list_details, HTTPStatus.OK
+        except Exception as ex:
+            log.error(f'Some error occurred trying to get invoice details: {ex}')
+            return {'message': 'Something was wrong trying to get invoice details'}, HTTPStatus.INTERNAL_SERVER_ERROR
         

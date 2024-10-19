@@ -184,3 +184,17 @@ class InvoiceService:
         total_cost=self.repository.sum_total_amount_by_customer_and_status(customer_id,STATUS_INVOICE_GENERATED)
         print(f'total cost {total_cost}')
         return total_cost
+    
+
+    def list_details_invoice_by_id(self,invoice_id):
+        """
+        This method query all invoice details
+        Args: 
+            invoice_id (UUID): invoice id
+
+        Returns:
+            invoice details (list): list of invoice details
+        """
+        #TODO obtener la fecha y hora de cada incidente
+        list_invoice_details=self.invoice_detail_repository.get_by_invoice_details_by_id(invoice_id)
+        return list_invoice_details

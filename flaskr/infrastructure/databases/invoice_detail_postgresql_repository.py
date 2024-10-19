@@ -32,6 +32,15 @@ class InvoiceDetailPostgresqlRepository(InvoiceDetailRepository):
                 .all()
             )
             return [issue_id for (issue_id,) in factured_issue_ids]
+        
+    
+    def get_by_invoice_details_by_id(self, invoice_id: str):
+        session = self.Session()
+        try:
+            details_model= session.query(InvoiceDetailModelSqlAlchemy).filter_by(invoice_id=invoice_id).all()
+            return [self._from_model(detail_model) for detail_model in details_model]
+        finally:
+            session.close()
 
     def _to_model(self, invoice_detail: InvoiceDetail) -> InvoiceDetailModelSqlAlchemy:
         return InvoiceDetailModelSqlAlchemy(
