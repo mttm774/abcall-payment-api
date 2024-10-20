@@ -20,5 +20,7 @@ class InvoiceMapper:
             'createdAt': invoice.created_at.isoformat(),
             'startAt': invoice.start_at.isoformat(),
             'generationDate': invoice.generation_date.isoformat(),
-            'endAt': invoice.end_at.isoformat()
+            'endAt': invoice.end_at.isoformat(),
+            'plan_amount':float(invoice.plan_amount),
+            'issues_amount':float(invoice.issues_amount)
         }

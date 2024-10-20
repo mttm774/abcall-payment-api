@@ -47,13 +47,13 @@ class InvoiceService:
 
             #2. consultar si se facturó el monto básico sino crear la factura y el detalle
             invoice_id=self.repository.invoice_by_month_year_by_customer(year,month,item.id)
-
+            #consultar el valor base
+            base_monthly_rate=self.customer_service.get_customer_plan_rate(item.id)
             issue_fee=self.customer_service.get_customer_plan_issue_fee(item.id)
             self.log.info(issue_fee)
             if invoice_id is None: # no existe la factura
                 self.log.info('no existe la factura')
-                #consultar el valor base
-                base_monthly_rate=self.customer_service.get_customer_plan_rate(item.id)
+                
                 
                 self.log.info(base_monthly_rate)
                 
@@ -70,7 +70,9 @@ class InvoiceService:
                             created_at=datetime.now(),
                             start_at=item.date_suscription,
                             generation_date=datetime.now(),
-                            end_at=datetime.fromisoformat(item.date_suscription) + timedelta(days=30)
+                            end_at=datetime.fromisoformat(item.date_suscription) + timedelta(days=30),
+                            plan_amount=base_monthly_rate,
+                            issues_amount=0
                             )
                 self.repository.create_invoice(new_invoice)
 
@@ -125,6 +127,7 @@ class InvoiceService:
             total_value=self.invoice_detail_repository.get_total_amount_by_invoice_id(invoice_id)
             invoice_to_update.amount=total_value
             invoice_to_update.total_amount=total_value
+            invoice_to_update.issues_amount=float(total_value)-float(base_monthly_rate)
             self.repository.update_invoice(invoice_to_update)
 
             #generating invoice
