@@ -127,7 +127,7 @@ class InvoiceService:
             total_value=self.invoice_detail_repository.get_total_amount_by_invoice_id(invoice_id)
             invoice_to_update.amount=total_value
             invoice_to_update.total_amount=total_value
-            invoice_to_update.issues_amount=float(total_value)-float(base_monthly_rate)
+            invoice_to_update.issues_amount = (float(total_value) or 0) - (float(base_monthly_rate) or 0)
             self.repository.update_invoice(invoice_to_update)
 
             #generating invoice
