@@ -14,16 +14,8 @@ class TestHealthCheck(unittest.TestCase):
         self.api.add_resource(HealthCheck, '/healthcheck')
         self.client = self.app.test_client()  
 
-    @patch('flaskr.endpoint.healthCheck.HealthCheck.Config')
-    def test_get_healthcheck(self, mock_config):
-
-        mock_config.ENVIRONMENT = "development"
-        mock_config.APP_NAME = "TestApp"
-
-
+    def test_get_healthcheck(self):
         response = self.client.get('/healthcheck')
-
-
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
 
