@@ -35,3 +35,4 @@ class InvoiceDetailModelSqlAlchemy(Base):
     chanel_plan_id = Column(PG_UUID(as_uuid=True), nullable=True)
     invoice_id = Column(PG_UUID(as_uuid=True),ForeignKey('invoice.id'), nullable=True)
     plan = relationship("InvoiceModelSqlAlchemy")
+    issue_date = Column(DateTime(timezone=True), nullable=True)

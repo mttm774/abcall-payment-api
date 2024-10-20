@@ -12,6 +12,7 @@ from  config import Config
 from .customer_service import CustomerService
 from .issues_service import IssueService
 from ..domain.constants import *
+from uuid import UUID
 class InvoiceService:
     def __init__(self, repository: InvoiceRepository,customer_repository: CustomerRepository=None,invoice_detail_repository: InvoiceDetailRepository=None):
         self.log = Logger()
@@ -84,7 +85,8 @@ class InvoiceService:
                     amount=base_monthly_rate,
                     tax=0,
                     total_amount=base_monthly_rate,
-                    chanel_plan_id=None
+                    chanel_plan_id=None,
+                    issue_date=None
                 )
                 self.invoice_detail_repository.create_invoice_detail(new_detail)
                 invoice_id=new_invoice.id
@@ -93,18 +95,17 @@ class InvoiceService:
             #insertar los incidentes reportados como detalles de factura
             issue_list=self.issue_service.get_issues_by_customer_list(item.id, year, month)
             
-           
+                
             if issue_list:
-                issue_list_ids = [issue.id for issue in issue_list]
-
-            
                 #consultar los incidentes reportados y si existen entonces crear un detalle por cada incidente reportado
-                missing_list_issues=self.invoice_detail_repository.get_unfactured_issue_ids(issue_list_ids)
-                self.log.info(f'missing issue list {missing_list_issues}')
-                missing_ids_set = set(missing_list_issues)
+                
+                all_billed_issues=self.invoice_detail_repository.get_factured_issue_ids()
+
 
                 for issue in issue_list:
-                    if issue.id in missing_ids_set:  
+                    issue_uuid = UUID(issue.id)
+                    if issue_uuid not in all_billed_issues:
+                        print(f'this is the issue date {issue.created_at}')
                         new_detail = InvoiceDetail(
                             id=uuid.uuid4(),
                             detail=f'cost by issue solved {issue.id}',
@@ -113,34 +114,24 @@ class InvoiceService:
                             amount=issue_fee,
                             tax=0,
                             total_amount=issue_fee,
-                            chanel_plan_id=issue.channel_plan_id 
+                            chanel_plan_id=issue.channel_plan_id,
+                            issue_date=issue.created_at
                         )
-                    self.invoice_detail_repository.create_invoice_detail(new_detail)
+                        self.invoice_detail_repository.create_invoice_detail(new_detail)
 
 
-            # now+=1
-            # self.log.info(f'generating invoice I{now}')
-            # new_invoice=Invoice(uuid.uuid4(),
-            #                     item.id,
-            #                     f'I{now}',
-            #                     uuid.uuid4(),
-            #                     item.plan_rate,
-            #                     0,
-            #                     item.plan_rate,
-            #                     'Emprendedor',
-            #                     uuid.uuid4(),
-            #                     'G', #Generada con éxito
-            #                     datetime.now(),
-            #                     None,
-            #                     datetime.now(),
-            #                     datetime.now()
-            #                     )
-            # self.repository.create_invoice(new_invoice)
-            # #generating invoice
-            # if self.__send_invoice_to_document(new_invoice)==False:
-            #     #error creating pdf document
-            #     new_invoice.status='E' # no fue posible generar la factura
-            #     self.repository.update_invoice(new_invoice)
+            #updating amount  invoice
+            invoice_to_update=self.repository.get_invoice_by_id(invoice_id)
+            total_value=self.invoice_detail_repository.get_total_amount_by_invoice_id(invoice_id)
+            invoice_to_update.amount=total_value
+            invoice_to_update.total_amount=total_value
+            self.repository.update_invoice(invoice_to_update)
+
+            #generating invoice
+            if self.__send_invoice_to_document(invoice_to_update)==False:
+                #error creating pdf document
+                invoice_to_update.status=STATUS_INVOICE_GENERATED_WITH_ERROR # no fue posible generar la factura
+                self.repository.update_invoice(invoice_to_update)
 
 
     def __send_invoice_to_document(self,invoice: Invoice):
@@ -156,18 +147,16 @@ class InvoiceService:
             data={
                 "id":str(invoice.id),
                 "customer_id":str(invoice.customer_id),
-                "invoice_id":invoice.invoice_id,
-                "payment_id":str(invoice.payment_id),
+                "invoice_id":str(invoice.invoice_id),
+                "plan_id":str(invoice.plan_id),
                 "amount":str(invoice.amount),
                 "tax":str(invoice.tax),
                 "total_amount":str(invoice.total_amount),
-                "subscription":invoice.subscription,
-                "subscription_id":str(invoice.subscription_id),
-                "status":invoice.status,
+                "status":str(invoice.status),
                 "created_at": invoice.created_at.isoformat() if invoice.created_at else None,
-                "updated_at": invoice.updated_at.isoformat() if invoice.updated_at else None,
+                "start_at": invoice.start_at.isoformat() if invoice.start_at else None,
                 "generation_date": invoice.generation_date.isoformat() if invoice.generation_date else None,
-                "period":invoice.period.isoformat() if invoice.generation_date else None,
+                "end_at":invoice.end_at.isoformat() if invoice.end_at else None,
             }
             self.log.info('calling endpoint to generate pdf invoice ')
             response = requests.post(f'{config.URL_REPORTS_SERVICE}/invoice',json=data)
@@ -184,3 +173,30 @@ class InvoiceService:
         except Exception as e:
             self.log.error(f'Comunication error with reports service: {str(e)}')
             return False
+        
+
+
+    def get_total_cost_pending(self, customer_id: UUID ):
+        """
+        This method query total cost of invoices
+        Args: 
+            customer_id (UUID): customer id
+        Returns:
+            total_cost: (decimal)
+        """
+        total_cost=self.repository.sum_total_amount_by_customer_and_status(customer_id,STATUS_INVOICE_GENERATED)
+        print(f'total cost {total_cost}')
+        return total_cost if total_cost is not None else 0
+    
+
+    def list_details_invoice_by_id(self,invoice_id):
+        """
+        This method query all invoice details
+        Args: 
+            invoice_id (UUID): invoice id
+
+        Returns:
+            invoice details (list): list of invoice details
+        """
+        list_invoice_details=self.invoice_detail_repository.get_by_invoice_details_by_id(invoice_id)
+        return list_invoice_details
