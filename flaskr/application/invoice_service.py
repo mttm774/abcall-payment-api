@@ -186,7 +186,7 @@ class InvoiceService:
         """
         total_cost=self.repository.sum_total_amount_by_customer_and_status(customer_id,STATUS_INVOICE_GENERATED)
         print(f'total cost {total_cost}')
-        return total_cost
+        return total_cost if total_cost is not None else 0
     
 
     def list_details_invoice_by_id(self,invoice_id):
