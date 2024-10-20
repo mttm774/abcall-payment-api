@@ -22,6 +22,8 @@ class InvoiceModelSqlAlchemy(Base):
     generation_date = Column(DateTime(timezone=True), nullable=False)
     start_at = Column(DateTime(timezone=True), nullable=False)
     end_at = Column(DateTime(timezone=True), nullable=False)
+    plan_amount = Column(Numeric(10, 2), nullable=True)
+    issues_amount = Column(Numeric(10, 2), nullable=True)
 
 
 class InvoiceDetailModelSqlAlchemy(Base):

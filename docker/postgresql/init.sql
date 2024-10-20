@@ -39,6 +39,8 @@ CREATE TABLE IF NOT EXISTS invoice (
     generation_date TIMESTAMP WITH TIME ZONE,
     start_at TIMESTAMP WITH TIME ZONE,
     end_at TIMESTAMP WITH TIME ZONE,
+    plan_amount NUMERIC(10, 2),
+    issues_amount NUMERIC(10, 2),
 
     CONSTRAINT fk_status
         FOREIGN KEY (status) 

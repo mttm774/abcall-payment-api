@@ -18,47 +18,22 @@ class TestInvoiceService(unittest.TestCase):
             invoice_detail_repository=self.invoice_detail_repository_mock
         )
 
-    # @patch('flaskr.application.invoice_service.CustomerService.get_customer_list')
-    # @patch('flaskr.application.invoice_service.IssueService.get_issues_by_customer_list')
-    # @patch('flaskr.application.invoice_service.requests.post')
-    # def test_generate_invoices_new_invoice(self, mock_post, mock_get_issues, mock_get_customers):
-    #     # Configurar el mock de los clientes
-    #     mock_get_customers.return_value = [MagicMock(id=1, plan_id='plan-1', date_suscription='2024-01-01')]
-    #     # Configurar el mock del issue
-    #     mock_get_issues.return_value = [MagicMock(id=uuid.uuid4(), created_at='2024-01-02')]
-    #     # Configurar el mock de la creación de la factura
-    #     self.invoice_repository_mock.invoice_by_month_year_by_customer.return_value = None
-    #     self.customer_repository_mock.get_customer_plan_rate.return_value = 100.0
-    #     self.customer_repository_mock.get_customer_plan_issue_fee.return_value = 20.0
-    #     mock_post.return_value = MagicMock(status_code=200, json=lambda: {})
-
-    #     self.invoice_service.generate_invoices()
-
-    #     # Verificar que se haya creado una nueva factura
-    #     self.invoice_repository_mock.create_invoice.assert_called_once()
-    #     invoice_call_args = self.invoice_repository_mock.create_invoice.call_args[0][0]
-    #     self.assertEqual(invoice_call_args.amount, 100.0)
-
-    #     # Verificar que se hayan insertado detalles en la factura
-    #     self.invoice_detail_repository_mock.create_invoice_detail.assert_called_once()
-
     @patch('flaskr.application.invoice_service.CustomerService.get_customer_list')
     @patch('flaskr.application.invoice_service.IssueService.get_issues_by_customer_list')
     @patch('flaskr.application.invoice_service.requests.post')
     def test_generate_invoices_existing_invoice(self, mock_post, mock_get_issues, mock_get_customers):
-        # Configurar el mock de los clientes
         mock_get_customers.return_value = [MagicMock(id=1, plan_id='plan-1', date_suscription='2024-01-01')]
-        # Simular que ya existe una factura
+
         self.invoice_repository_mock.invoice_by_month_year_by_customer.return_value = uuid.uuid4()
         
         self.invoice_service.generate_invoices()
 
-        # Verificar que no se haya creado una nueva factura
+
         self.invoice_repository_mock.create_invoice.assert_not_called()
 
     @patch('flaskr.application.invoice_service.requests.post')
     def test_send_invoice_to_document_success(self, mock_post):
-        # Simular una respuesta exitosa de la API
+
         mock_post.return_value = MagicMock(status_code=200, json=lambda: {})
 
         invoice = Invoice(
@@ -73,7 +48,9 @@ class TestInvoiceService(unittest.TestCase):
             created_at=datetime.now(),
             start_at=datetime.now(),
             generation_date=datetime.now(),
-            end_at=datetime.now() + timedelta(days=30)
+            end_at=datetime.now() + timedelta(days=30),
+            plan_amount=0,
+            issues_amount=0
         )
 
         result = self.invoice_service._InvoiceService__send_invoice_to_document(invoice)
@@ -82,7 +59,7 @@ class TestInvoiceService(unittest.TestCase):
 
     @patch('flaskr.application.invoice_service.requests.post')
     def test_send_invoice_to_document_failure(self, mock_post):
-        # Simular un error de API
+
         mock_post.return_value = MagicMock(status_code=500)
 
         invoice = Invoice(
@@ -97,7 +74,9 @@ class TestInvoiceService(unittest.TestCase):
             created_at=datetime.now(),
             start_at=datetime.now(),
             generation_date=datetime.now(),
-            end_at=datetime.now() + timedelta(days=30)
+            end_at=datetime.now() + timedelta(days=30),
+            plan_amount=0,
+            issues_amount=0
         )
 
         result = self.invoice_service._InvoiceService__send_invoice_to_document(invoice)

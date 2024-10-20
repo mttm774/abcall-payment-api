@@ -68,7 +68,9 @@ class InvoicePostgresqlRepository(InvoiceRepository):
             created_at=invoice.created_at,
             start_at=invoice.start_at,
             generation_date=invoice.generation_date,
-            end_at=invoice.end_at
+            end_at=invoice.end_at,
+            plan_amount=invoice.plan_amount,
+            issues_amount=invoice.issues_amount
         )
 
     def _from_model(self, model: InvoiceModelSqlAlchemy) -> Invoice:
@@ -84,7 +86,9 @@ class InvoicePostgresqlRepository(InvoiceRepository):
             created_at=model.created_at,
             start_at=model.start_at,
             generation_date=model.generation_date,
-            end_at=model.end_at
+            end_at=model.end_at,
+            plan_amount=model.plan_amount,
+            issues_amount=model.issues_amount
         )
     
     def create_invoice(self,invoice: Invoice):
@@ -112,6 +116,7 @@ class InvoicePostgresqlRepository(InvoiceRepository):
                     "start_at": invoice.start_at.isoformat() if invoice.start_at else None,
                     "generation_date": invoice.generation_date.isoformat() if invoice.generation_date else None,
                     "end_at":invoice.end_at.isoformat() if invoice.end_at else None,
+                    "issues_amount":invoice.issues_amount
                 })
             session.commit()
         finally:
