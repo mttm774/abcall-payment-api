@@ -24,7 +24,9 @@ class TestInvoiceMapper(unittest.TestCase):
                 created_at=datetime(2024, 1, 1),
                 start_at=datetime(2024, 1, 1),
                 generation_date=datetime(2024, 1, 1),
-                end_at=datetime(2024, 2, 1)
+                end_at=datetime(2024, 2, 1),
+                plan_amount=0,
+                issues_amount=0
             ),
             Invoice(
                 id=uuid4(),
@@ -38,7 +40,9 @@ class TestInvoiceMapper(unittest.TestCase):
                 created_at=datetime(2024, 2, 1),
                 start_at=datetime(2024, 2, 1),
                 generation_date=datetime(2024, 2, 1),
-                end_at=datetime(2024, 3, 1)
+                end_at=datetime(2024, 3, 1),
+                plan_amount=0,
+                issues_amount=0
             )
         ]
 
