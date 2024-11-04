@@ -3,13 +3,13 @@ FROM python:alpine3.11 AS python-base
 WORKDIR /app
 
 RUN apk add --no-cache \
-    gcc \
-    musl-dev \
-    linux-headers \
-    libffi-dev \
-    nginx \
-    openssl-dev \
-    make
+    && gcc \
+    && musl-dev \
+    && linux-headers \
+    && libffi-dev \
+    && nginx \
+    && openssl-dev \
+    && make
 
 COPY requirements.txt ./
 RUN pip install --upgrade pip

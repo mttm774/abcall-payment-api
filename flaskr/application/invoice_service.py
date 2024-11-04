@@ -11,7 +11,7 @@ from ..utils import Logger
 from  config import Config
 from .customer_service import CustomerService
 from .issues_service import IssueService
-from ..domain.constants import *
+from ..domain.constants import STATUS_INVOICE_GENERATED, STATUS_INVOICE_GENERATED_WITH_ERROR, STATUS_INVOICE_PAID
 from uuid import UUID
 class InvoiceService:
     def __init__(self, repository: InvoiceRepository,customer_repository: CustomerRepository=None,invoice_detail_repository: InvoiceDetailRepository=None):
