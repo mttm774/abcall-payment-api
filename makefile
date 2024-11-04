@@ -24,7 +24,7 @@ run-tests:
 run-tests-coverage:
 	 coverage run -m unittest discover -s tests -p '*Test.py' -v
 	 coverage report -m
-	 coverage html
+	 coverage xml -i
 	 coverage report --fail-under=50
 
 run-docker:
