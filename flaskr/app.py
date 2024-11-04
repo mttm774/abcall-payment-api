@@ -12,7 +12,7 @@ from flask_cors import CORS
 config = Config()
 
 
-app = create_app('default')
+app = create_app()
 CORS(app)
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('default')
