@@ -219,14 +219,4 @@ class InvoiceService:
     
 
 
-    def get_total_cost_pending_two(self, customer_id: UUID ):
-        """
-        This method query total cost of invoices
-        Args: 
-            customer_id (UUID): customer id
-        Returns:
-            total_cost: (decimal)
-        """
-        total_cost=self.repository.sum_total_amount_by_customer_and_status(customer_id,STATUS_INVOICE_GENERATED)
-        print(f'total cost {total_cost}')
-        return total_cost if total_cost is not None else 0
+    
