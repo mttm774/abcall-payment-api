@@ -71,7 +71,7 @@ class Invoices(Resource):
     def get_list_details_invoice_by_id(self):
         try:
 
-            log.info(f'Receive request to get invoice details')
+            log.info('Receive request to get invoice details')
 
             invoice_id = request.args.get('invoice_id')
             invoice_detail_list = self.service.list_details_invoice_by_id(invoice_id)

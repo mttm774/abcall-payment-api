@@ -4,16 +4,16 @@ COPY . /app/
 
 WORKDIR /app
 
-RUN apk update && apk upgrade \
-&& apk add --no-cache build-base \
-&& apk add --no-cache g++ jpeg-dev zlib-dev libjpeg make gcc \
-&& apk add --no-cache python3-dev  py-pip \
-&& apk add --no-cache py-pip py-virtualenv \
-&& pip install --upgrade pip setuptools \
-&& pip install --upgrade pip \
-&& pip install wheel \
-&& make activate \
-&& make install
+RUN apk update && apk upgrade
+RUN apk add --no-cache build-base
+RUN apk add --no-cache g++ jpeg-dev zlib-dev libjpeg make gcc
+RUN apk add --no-cache python3-dev  py-pip
+RUN apk add --no-cache py-pip py-virtualenv
+RUN pip install --upgrade pip setuptools
+RUN pip install --upgrade pip
+RUN pip install wheel
+RUN make activate
+RUN make install
 
 EXPOSE 3005
 

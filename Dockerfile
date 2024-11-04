@@ -12,10 +12,10 @@ RUN apk add --no-cache \
     && make
 
 COPY requirements.txt ./
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
-RUN pip install gunicorn
-
+RUN pip install --upgrade pip \
+&& pip install -r requirements.txt \
+&& pip install gunicorn
+    
 COPY . /app
 
 COPY ./docker/nginx.conf /etc/nginx/nginx.conf
