@@ -23,7 +23,7 @@ class IssueService:
         """
         logging.basicConfig(level=logging.INFO)
         self.logger = logging.getLogger('default')
-        self.logger.info(f'Instanced customer service')
+        self.logger.info('Instanced customer service')
         self.base_url = os.environ.get('ISSUE_API_PATH')
 
     def get_issues_by_customer_list(self,customer_id,year, month):
@@ -41,12 +41,12 @@ class IssueService:
             
             self.logger.info(f'init consuming api issues {self.base_url}/issue/getIssuesByCustomer?customer_id={customer_id}&year={year}&month={month}')
             response = requests.get(f'{self.base_url}/issue/getIssuesByCustomer?customer_id={customer_id}&year={year}&month={month}')
-            self.logger.info(f'quering issues')
+            self.logger.info('quering issues')
             if response.status_code == 200:
-                self.logger.info(f'status code 200 quering issues services')
+                self.logger.info('status code 200 quering issues services')
                 data = response.json()
                 if data:
-                    self.logger.info(f'there are issues response ')
+                    self.logger.info('there are issues response ')
                     for item in data:
                         issues.append(Issue(item.get('id'),
                                 item.get('auth_user_id'),
@@ -59,11 +59,11 @@ class IssueService:
                                 item.get('channel_plan_id')
                         ))
  
-                    self.logger.info(f'deserializing issue list')
+                    self.logger.info('deserializing issue list')
                     return issues
                     
                 else:
-                    self.logger.info(f'there arent issues')
+                    self.logger.info('there arent issues')
                     return None
             else:
                 self.logger.info(f"error consuming issue api: {response.status_code}")

@@ -139,7 +139,7 @@ class InvoicePostgresqlRepository(InvoiceRepository):
                 .scalar()
             print(f'total sum :{total_sum}')
             return total_sum
-        except Exception as e:
+        except Exception:
             return 0
         finally:
             session.close()
