@@ -203,3 +203,30 @@ class InvoiceService:
         """
         list_invoice_details=self.invoice_detail_repository.get_by_invoice_details_by_id(invoice_id)
         return list_invoice_details
+    
+
+    def list_details_invoice_by_id_two(self,invoice_id):
+        """
+        This method query all invoice details
+        Args: 
+            invoice_id (UUID): invoice id
+
+        Returns:
+            invoice details (list): list of invoice details
+        """
+        list_invoice_details=self.invoice_detail_repository.get_by_invoice_details_by_id(invoice_id)
+        return list_invoice_details
+    
+
+
+    def get_total_cost_pending_two(self, customer_id: UUID ):
+        """
+        This method query total cost of invoices
+        Args: 
+            customer_id (UUID): customer id
+        Returns:
+            total_cost: (decimal)
+        """
+        total_cost=self.repository.sum_total_amount_by_customer_and_status(customer_id,STATUS_INVOICE_GENERATED)
+        print(f'total cost {total_cost}')
+        return total_cost if total_cost is not None else 0

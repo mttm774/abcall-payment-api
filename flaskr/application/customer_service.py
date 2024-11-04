@@ -138,3 +138,38 @@ class CustomerService:
         except Exception as e:
             self.logger.info(f"Error comunication with customer fee api: {str(e)}")
             return None
+        
+
+    def get_customer_plan_issue_fee_two(self,customer_id):
+        """
+        method to query customer issue fee
+        Args:
+            customer_id (Customer): customer id
+        Return:
+            fee (float): issue fee
+        """
+        fee=0
+        try:
+            
+            self.logger.info(f'init consuming api customers {self.base_url}/customer/get_issue_fee_by_customer?customer_id={customer_id}')
+            response = requests.get(f'{self.base_url}/customer/get_issue_fee_by_customer?customer_id={customer_id}')
+            self.logger.info(f'quering customer issue fee')
+            if response.status_code == 200:
+                self.logger.info(f'status code 200 quering customer issue fee service')
+                data = response.json()
+                if data:
+                    self.logger.info(f'there are customer issue fee response ')
+                    fee=data.get('issue_fee')
+
+                    return fee
+                    
+                else:
+                    self.logger.info(f'there arent response')
+                    return None
+            else:
+                self.logger.info(f"error consuming customer fee api: {response.status_code}")
+                return None
+            
+        except Exception as e:
+            self.logger.info(f"Error comunication with customer fee api: {str(e)}")
+            return None
