@@ -23,7 +23,7 @@ class CustomerService:
         """
         logging.basicConfig(level=logging.INFO)
         self.logger = logging.getLogger('default')
-        self.logger.info(f'Instanced customer service')
+        self.logger.info('Instanced customer service')
         self.base_url = os.environ.get('CUSTOMER_API_PATH')
 
     def get_customer_list(self):
@@ -39,12 +39,12 @@ class CustomerService:
             
             self.logger.info(f'init consuming api customers {self.base_url}/customer/getCustomerList')
             response = requests.get(f'{self.base_url}/customer/getCustomerList')
-            self.logger.info(f'quering customers')
+            self.logger.info('quering customers')
             if response.status_code == 200:
-                self.logger.info(f'status code 200 queryng customer services')
+                self.logger.info('status code 200 queryng customer services')
                 data = response.json()
                 if data:
-                    self.logger.info(f'there are customer response ')
+                    self.logger.info('there are customer response ')
                     for item in data:
 
 
@@ -54,11 +54,11 @@ class CustomerService:
                                 item.get('date_suscription')                       
                         ))
  
-                    self.logger.info(f'deserializing customer list')
+                    self.logger.info('deserializing customer list')
                     return customers
                     
                 else:
-                    self.logger.info(f'there arent customers')
+                    self.logger.info('there arent customers')
                     return None
             else:
                 self.logger.info(f"error consuming customer api: {response.status_code}")
@@ -83,18 +83,18 @@ class CustomerService:
             
             self.logger.info(f'init consuming api customers {self.base_url}/customer/getRateByCustomer?customer_id={customer_id}')
             response = requests.get(f'{self.base_url}/customer/getRateByCustomer?customer_id={customer_id}')
-            self.logger.info(f'quering customer rate')
+            self.logger.info('quering customer rate')
             if response.status_code == 200:
-                self.logger.info(f'status code 200 quering customer rate service')
+                self.logger.info('status code 200 quering customer rate service')
                 data = response.json()
                 if data:
-                    self.logger.info(f'there are customer response ')
+                    self.logger.info('there are customer response ')
                     rate=data.get('basic_monthly_rate')
 
                     return rate
                     
                 else:
-                    self.logger.info(f'there arent response')
+                    self.logger.info('there arent response')
                     return None
             else:
                 self.logger.info(f"error consuming customer rate api: {response.status_code}")
@@ -118,18 +118,18 @@ class CustomerService:
             
             self.logger.info(f'init consuming api customers {self.base_url}/customer/get_issue_fee_by_customer?customer_id={customer_id}')
             response = requests.get(f'{self.base_url}/customer/get_issue_fee_by_customer?customer_id={customer_id}')
-            self.logger.info(f'quering customer issue fee')
+            self.logger.info('quering customer issue fee')
             if response.status_code == 200:
-                self.logger.info(f'status code 200 quering customer issue fee service')
+                self.logger.info('status code 200 quering customer issue fee service')
                 data = response.json()
                 if data:
-                    self.logger.info(f'there are customer issue fee response ')
+                    self.logger.info('there are customer issue fee response ')
                     fee=data.get('issue_fee')
 
                     return fee
                     
                 else:
-                    self.logger.info(f'there arent response')
+                    self.logger.info('there arent response')
                     return None
             else:
                 self.logger.info(f"error consuming customer fee api: {response.status_code}")
